@@ -20,6 +20,27 @@ def create_baseline():
 	model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 	return model
 
+# smaller model
+def create_smaller():
+	# create model
+	model = Sequential()
+	model.add(Dense(30, input_dim=60, kernel_initializer='normal', activation='relu'))
+	model.add(Dense(1, kernel_initializer='normal', activation='sigmoid'))
+	# Compile model
+	model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+	return model
+
+# larger model
+def create_larger():
+	# create model
+	model = Sequential()
+	model.add(Dense(60, input_dim=60, kernel_initializer='normal', activation='relu'))
+	model.add(Dense(30, kernel_initializer='normal', activation='relu'))
+	model.add(Dense(1, kernel_initializer='normal', activation='sigmoid'))
+	# Compile model
+	model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+	return model
+
 if __name__ == '__main__':
     # load dataset
     dataframe = pandas.read_csv("..\sonar.csv", header=None)
@@ -36,7 +57,7 @@ if __name__ == '__main__':
     # evaluate baseline model with standardized dataset
     estimators = []
     estimators.append(('standardize', StandardScaler()))
-    estimators.append(('mlp', KerasClassifier(build_fn=create_baseline, epochs=100, batch_size=5, verbose=0)))
+    estimators.append(('mlp', KerasClassifier(build_fn=create_smaller, epochs=100, batch_size=5, verbose=0)))
     pipeline = Pipeline(estimators)
     kfold = StratifiedKFold(n_splits=10, shuffle=True)
     results = cross_val_score(pipeline, X, encoded_Y, cv=kfold)
