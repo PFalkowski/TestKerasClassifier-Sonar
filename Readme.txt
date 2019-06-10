@@ -1,0 +1,1 @@
+This is example project for playing with Keras based on Jason Brownlee's article awailable online https://machinelearningmastery.com/binary-classification-tutorial-with-the-keras-deep-learning-library/
