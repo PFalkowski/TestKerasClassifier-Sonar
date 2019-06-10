@@ -33,8 +33,11 @@ if __name__ == '__main__':
     encoder.fit(Y)
     encoded_Y = encoder.transform(Y)
 
-    # evaluate model with standardized dataset
-    estimator = KerasClassifier(build_fn=create_baseline, epochs=100, batch_size=5, verbose=0)
+    # evaluate baseline model with standardized dataset
+    estimators = []
+    estimators.append(('standardize', StandardScaler()))
+    estimators.append(('mlp', KerasClassifier(build_fn=create_baseline, epochs=100, batch_size=5, verbose=0)))
+    pipeline = Pipeline(estimators)
     kfold = StratifiedKFold(n_splits=10, shuffle=True)
-    results = cross_val_score(estimator, X, encoded_Y, cv=kfold)
-    print("Results: %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
+    results = cross_val_score(pipeline, X, encoded_Y, cv=kfold)
+    print("Standardized: %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
